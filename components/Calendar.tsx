@@ -1,4 +1,9 @@
 import React from "react";
+import { gradients, baseRating, demoData } from "@/libs/utilities";
+
+interface CalendarProps {
+  demo?: boolean;
+}
 
 const months: Record<string, string> = {
   January: "Jan",
@@ -26,7 +31,7 @@ const daysOfWeek: string[] = [
   "Friday",
   "Saturday",
 ];
-function Calendar() {
+function Calendar({ demo }: CalendarProps) {
   const year = 2024;
   const month = "December";
   const monthNow = new Date(year, Object.keys(months).indexOf(month), 1);
@@ -42,33 +47,42 @@ function Calendar() {
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
 
   return (
-    <section className="flex flex-col overflow-hidden gap-1">
+    <section className="flex flex-col overflow-hidden gap-1 py-4 sm:py-6 md:py-10">
       {Array.from(Array(numRows)).map((row, rowIndex) => {
         return (
           <div key={rowIndex} className="grid grid-cols-7 gap-1">
             {daysOfWeek.map((dayOfWeek, dayOfWeekIndex) => {
-              let dayIndex =
+              const dayIndex =
                 rowIndex * 7 + dayOfWeekIndex - (firstDayOfMonth - 1);
 
-              let displayDay =
+              const displayDay =
                 dayIndex > daysInMonth
                   ? false
                   : row === 0 && dayOfWeekIndex
                   ? false
                   : true;
 
-              let isToday = dayIndex === now.getDate();
+              const isToday = dayIndex === now.getDate();
 
               if (!displayDay) {
                 return <div className="bg-white" key={dayOfWeekIndex} />;
               }
 
+              const color = demo
+                ? gradients.red[baseRating[dayIndex]]
+                : dayIndex in demoData
+                ? gradients.red[demoData[dayIndex]]
+                : "white";
+
               return (
                 <div
+                  style={{ background: color }}
                   key={dayOfWeekIndex}
-                  className="text-xs sm:text-sm border border-solid p-2 flex items-center gap-2"
+                  className={`text-xs sm:text-sm border border-solid p-2 flex items-center gap-2 justify-between rounded-lg ${
+                    isToday ? "border-red-400" : "border-red-100"
+                  } ${color === "white" ? "text-red-400" : "text-white"}`}
                 >
-                  Some data
+                  {dayIndex}
                 </div>
               );
             })}

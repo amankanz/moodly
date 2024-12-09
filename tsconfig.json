@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2017", // Specifies ECMAScript target version
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -12,6 +13,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "useDefineForClassFields": true, // Better handling of class fields
     "plugins": [
       {
         "name": "next"

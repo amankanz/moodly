@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { fugaz, openSans } from "@/app/fonts/fonts";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Moodly",
@@ -15,9 +16,11 @@ export default function RootLayout({
 }>) {
   const header = (
     <header className="p-4 sm:p-8 flex items-center justify-between gap-4">
-      <h1 className={`text-base sm:text-lg textGradient ${fugaz.className}`}>
-        Moodly
-      </h1>
+      <Link href={"/"}>
+        <h1 className={`text-base sm:text-lg textGradient ${fugaz.className}`}>
+          Moodly
+        </h1>
+      </Link>
 
       <div className="flex items-center justify-between">
         PLACEHOLDER CTA | STATS

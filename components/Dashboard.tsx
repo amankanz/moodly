@@ -75,7 +75,7 @@ function Dashboard() {
         })}
       </div>
 
-      <Calendar />
+      <Calendar demo />
     </section>
   );
 }
