@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { fugaz, openSans } from "@/app/fonts/fonts";
 import Link from "next/link";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Moodly",
@@ -36,6 +37,7 @@ export default function RootLayout({
           href="https://kanezaio.netlify.app/"
           target="_blank"
           className="underline hover:no-underline"
+          rel="noreferrer"
         >
           Kaneza.io
         </a>{" "}
@@ -46,13 +48,15 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col text-slate-700 ${openSans.className}`}
-      >
-        {header}
-        {children}
-        {footer}
-      </body>
+      <AuthProvider>
+        <body
+          className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col text-slate-700 ${openSans.className}`}
+        >
+          {header}
+          {children}
+          {footer}
+        </body>
+      </AuthProvider>
     </html>
   );
 }
