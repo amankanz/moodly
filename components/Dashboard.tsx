@@ -89,7 +89,7 @@ import { fugaz } from "@/app/fonts/fonts";
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/context/AuthContext";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { DB } from "@/firebase";
 import Loading from "./Loading";
 import Login from "./Login";
@@ -128,7 +128,7 @@ function Dashboard() {
       }
 
       const newData = { ...userDataObj };
-      if (!newData?.[year]) {
+      if (!newData[year]) {
         newData[year] = {};
       }
 
@@ -137,7 +137,7 @@ function Dashboard() {
       }
       newData[year][month][day] = mood;
 
-      // Update the current state
+      // Update local state
       setData(newData);
       setUserDataObj(newData);
 
@@ -159,6 +159,26 @@ function Dashboard() {
     }
   }
 
+  // Fetch the user's data from Firebase
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUserData = async () => {
+      const docRef = doc(DB, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setUserDataObj(data); // Update the global state with user data
+        setData(data); // Set the local data for the calendar
+      } else {
+        console.warn("No user data found!");
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
   const statuses: Statuses = {
     num_days: 14,
     time_remaining: "14:28:39",
@@ -173,11 +193,11 @@ function Dashboard() {
     Elated: "😍",
   };
 
-  useEffect(() => {
-    if (!user || !userDataObj) return;
+  // useEffect(() => {
+  //   if (!user || !userDataObj) return;
 
-    setData(userDataObj);
-  }, [user, userDataObj]);
+  //   setData(userDataObj);
+  // }, [user, userDataObj]);
 
   if (isLoading) {
     return <Loading />;
@@ -235,7 +255,7 @@ function Dashboard() {
         })}
       </div>
 
-      <Calendar demo data={data} handleSetMood={handleSetMood} />
+      <Calendar demo completeData={data} handleSetMood={handleSetMood} />
     </section>
   );
 }

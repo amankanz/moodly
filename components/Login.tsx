@@ -45,9 +45,9 @@ function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isRegister, setIsRegister] = useState<boolean>(false);
-  const [setAuthenticating, setAuthenticating] = useState<boolean>();
+  const [authenticating, setAuthenticating] = useState<boolean>();
 
-  const { signup, login } = useAuth;
+  const { signup, login } = useAuth();
 
   async function handleSubmit() {
     if (!email || !password || password.length < 5) {
@@ -58,10 +58,10 @@ function Login() {
     try {
       if (isRegister) {
         console.log("Login an existing user!");
-        await signup(email, password);
+        await signup({ email, password }); // Pass as an object
       } else {
         console.log("Signing up a new user.");
-        await login(email, password);
+        await login({ email, password }); // Pass as an object
       }
     } catch (err) {
       console.log("Error Message:", err);
@@ -91,7 +91,11 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div className="w-full max-w-[300px] mx-auto">
-        <Button text="Submit" full />
+        <Button
+          clickHandler={handleSubmit}
+          text={authenticating ? "Submitting" : "Submit"}
+          full
+        />
       </div>
       <p className="text-center">
         {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}

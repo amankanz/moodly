@@ -3,6 +3,7 @@ import "./globals.css";
 import { fugaz, openSans } from "@/app/fonts/fonts";
 import Link from "next/link";
 import { AuthProvider } from "@/context/AuthContext";
+// import Head from "./head";
 
 export const metadata: Metadata = {
   title: "Moodly",
@@ -48,6 +49,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      {/* <Head /> */}
       <AuthProvider>
         <body
           className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col text-slate-700 ${openSans.className}`}
