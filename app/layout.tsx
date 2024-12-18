@@ -41,7 +41,7 @@ export default function RootLayout({
         >
           Kaneza.io
         </a>{" "}
-        2025 | Created with 💗
+        {new Date().getFullYear()} | Created with 💗
       </p>
     </footer>
   );

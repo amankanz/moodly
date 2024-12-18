@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "target": "es2017", // Specifies ECMAScript target version
     "allowJs": true,
     "skipLibCheck": true,
@@ -14,7 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     // "jsx": "preserve",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "incremental": true,
     "useDefineForClassFields": true, // Better handling of class fields
     "forceConsistentCasingInFileNames": true,
@@ -24,9 +28,18 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
