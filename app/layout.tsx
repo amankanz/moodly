@@ -3,6 +3,7 @@ import "./globals.css";
 import { fugaz, openSans } from "@/app/fonts/fonts";
 import Link from "next/link";
 import { AuthProvider } from "@/context/AuthContext";
+import Logout from "@/components/Logout";
 // import Head from "./head";
 
 export const metadata: Metadata = {
@@ -24,9 +25,7 @@ export default function RootLayout({
         </h1>
       </Link>
 
-      <div className="flex items-center justify-between">
-        PLACEHOLDER CTA | STATS
-      </div>
+      <Logout />
     </header>
   );
 
