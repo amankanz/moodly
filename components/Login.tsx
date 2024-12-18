@@ -1,39 +1,3 @@
-/*
-import React from "react";
-import { fugaz } from "@/app/fonts/fonts";
-import Button from "./Button";
-
-function Login() {
-  return (
-    <section className="flex flex-col flex-1 justify-center items-center gap-4">
-      <h3 className={`text-xl sm:text-2xl md:text-3xl ${fugaz.className}`}>
-        Log In | Sign Up
-      </h3>
-      <p>You&#39;re one step away!</p>
-      <input
-        className="w-full max-w-[300px] mx-auto px-4 py-2 sm:py-3 border border-solid border-[#ff9a9e] rounded-full outline-none duration-200 hover:border-[#e65156] focus:border-[#e65156]"
-        placeholder="Email"
-        type="email"
-      />
-      <input
-        className="w-full max-w-[300px] mx-auto px-4 py-2 sm:py-3 border border-solid border-[#ff9a9e] rounded-full outline-none duration-200 hover:border-[#e65156] focus:border-[#e65156]"
-        placeholder="Password"
-        type="password"
-      />
-      <div className="w-full max-w-[300px] mx-auto">
-        <Button text="Submit" full />
-      </div>
-      <p className="text-center">
-        Don&#39;t have an account?{" "}
-        <span className="text-[#ff9a9e] cursor-pointer">Sign up</span>
-      </p>
-    </section>
-  );
-}
-
-export default Login;
-*/
-
 "use client";
 
 import React, { useState } from "react";
@@ -45,37 +9,55 @@ function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isRegister, setIsRegister] = useState<boolean>(false);
-  const [authenticating, setAuthenticating] = useState<boolean>();
+  const [authenticating, setAuthenticating] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { signup, login } = useAuth();
+  const { signup, login } = useAuth(); // Assuming this doesn't manipulate isLoading directly.
 
-  async function handleSubmit() {
-    if (!email || !password || password.length < 5) {
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault(); // Prevent page reload
+    setErrorMessage(null); // Reset error message
+
+    if (!email || !password) {
+      setErrorMessage("Please fill in all fields.");
       return;
     }
 
-    setAuthenticating(true);
+    if (password.length < 5) {
+      setErrorMessage("Password must be at least 5 characters long.");
+      return;
+    }
+
+    setAuthenticating(true); // Local loading state
     try {
       if (isRegister) {
-        console.log("Login an existing user!");
-        await signup({ email, password }); // Pass as an object
+        await signup({ email, password });
       } else {
-        console.log("Signing up a new user.");
-        await login({ email, password }); // Pass as an object
+        await login({ email, password });
       }
     } catch (err) {
-      console.log("Error Message:", err);
+      setErrorMessage(
+        isRegister
+          ? "An error occurred during registration. Please try again."
+          : "User not found or incorrect credentials."
+      );
     } finally {
-      setAuthenticating(false);
+      setAuthenticating(false); // Reset local loading state
     }
   }
 
   return (
-    <section className="flex flex-col flex-1 justify-center items-center gap-4">
+    <form
+      className="flex flex-col flex-1 justify-center items-center gap-4"
+      onSubmit={handleSubmit}
+    >
       <h3 className={`text-xl sm:text-2xl md:text-3xl ${fugaz.className}`}>
-        {isRegister ? "Log In" : "Sign Up"}
+        {isRegister ? "Register" : "Log In"}
       </h3>
       <p>You&#39;re one step away!</p>
+      {errorMessage && (
+        <p className="text-red-500 text-center">{errorMessage}</p>
+      )}
       <input
         className="w-full max-w-[300px] mx-auto px-4 py-2 sm:py-3 border border-solid border-[#ff9a9e] rounded-full outline-none duration-200 hover:border-[#e65156] focus:border-[#e65156]"
         placeholder="Email"
@@ -92,21 +74,25 @@ function Login() {
       />
       <div className="w-full max-w-[300px] mx-auto">
         <Button
-          clickHandler={handleSubmit}
-          text={authenticating ? "Submitting" : "Submit"}
+          type="submit"
+          text={authenticating ? "Submitting..." : "Submit"}
           full
+          disabled={authenticating}
         />
       </div>
       <p className="text-center">
         {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
         <button
-          onClick={() => setIsRegister(!isRegister)}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsRegister(!isRegister);
+          }}
           className="text-[#ff9a9e] cursor-pointer"
         >
           {isRegister ? "Sign in" : "Sign up"}
         </button>
       </p>
-    </section>
+    </form>
   );
 }
 
